@@ -3,17 +3,21 @@ import welcome from '~/views/welcome.vue';
 import { projectAuth } from '@/firebase/config'
 
 const requireAuth = (to, from) => {
-
   const user = projectAuth.currentUser;
-
-  console.log(user);
-
   if (!user && to.name !== 'welcome') {
     return {
       name: 'welcome'
-    }
+    };
   }
+};
 
+const requireNoAuth = (to, from) => {
+  const user = projectAuth.currentUser;
+  if(user) {
+    return {
+      name: 'chatroom'
+    };
+  }
 };
 
 const router = createRouter({
@@ -22,7 +26,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'welcome',
-      component: welcome
+      component: welcome,
+      beforeEnter: requireNoAuth
     },
     {
       path: '/chatroom',
